@@ -65,6 +65,19 @@ class Dictionary{
 
 public class BFS3Word {
     public static void main(String[] args) {
+
+        // Example code using Kattio to read data from System.in
+        Kattio io = new Kattio(System.in, System.out);
+        while (io.hasMoreTokens()) {
+            String startWord = io.getWord();
+            String endWord = io.getWord();
+
+            start(startWord, endWord);
+       }
+       io.close();
+
+    }
+    public static void start(String startWord, String endWord){
         Dictionary all3Words = new Dictionary("word3.txt");
 
         /*
@@ -72,14 +85,16 @@ public class BFS3Word {
             Do we need other containers to store data we have already generated?
         */
 
-        // Example of start,- and end-word. Try to find a path from "blå" to "röd"!
-        Node startWord = new Node("blå");
-        Node endWord = new Node("röd");
+        Node startNode = new Node(startWord);
+        Node endNode = new Node(endWord);
 
         /*
             How should the logic be for the "brute-force" search?
             We probably need a while-loop, what should the loop condition be?
         */
+
+        // Here should the code or method be called to print out the found path
+        System.out.println(startNode.getWord() + " -> " + endNode.getWord());
     }
 
     /*
