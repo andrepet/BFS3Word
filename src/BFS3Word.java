@@ -5,8 +5,28 @@ import java.util.LinkedList;
 import java.util.List;
 
 class Node{
-    String word;
-    Node parent;
+    private String word;
+    private Node parent;
+
+    public Node(String word){
+        this.word = word;
+    }
+
+    public String getWord() {
+        return word;
+    }
+
+    public Node getParent() {
+        return parent;
+    }
+
+    public void setParent(Node parent) {
+        this.parent = parent;
+    }
+
+    public boolean equals(Node node) {
+        return word.equals(node.word);
+    }
 }
 
 class Dictionary{
@@ -51,6 +71,10 @@ public class BFS3Word {
             Do we need other containers to store our data?
             Do we need other containers to store data we have already generated?
         */
+
+        // Example of start,- and end-word. Try to find a path from "blå" to "röd"!
+        Node startWord = new Node("blå");
+        Node endWord = new Node("röd");
 
         /*
             How should the logic be for the "brute-force" search?
