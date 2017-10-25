@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 class Node{
     private String word;
@@ -74,25 +75,24 @@ public class BFS3Word {
             String endWord = io.getWord();
 
             start(startWord, endWord);
-       }
-       io.close();
+        }
+        io.close();
 
     }
     public static void start(String startWord, String endWord){
         Dictionary swedishDictionary = new Dictionary("word3.txt");
 
-        /*
-            Do we need other containers to store our data?
-            Do we need other containers to store data we have already generated?
-        */
+        Dictionary visitedChildren = new Dictionary();
+        Queue<Node> remainingChildren = new LinkedList<>();
 
         Node startNode = new Node(startWord);
         Node endNode = new Node(endWord);
 
-        /*
-            How should the logic be for the "brute-force" search?
-            We probably need a while-loop, what should the loop condition be?
-        */
+        remainingChildren.add(startNode);
+        while(!remainingChildren.isEmpty()){
+            Node currentNode = remainingChildren.remove();
+            create3WordChildren(currentNode, endNode, remainingChildren, swedishDictionary, visitedChildren);
+        }
 
         if (endNode.getParent() != null){
             System.out.printf("A path exist between '%s' to '%s'! \n", startNode.getWord(), endNode.getWord());
@@ -107,17 +107,48 @@ public class BFS3Word {
         }
     }
 
-    /*
-        We need to generate 3-word-children for the word of interest...so let's make a method!
-        What should we send into public static void create3WordChildren?
-    */
-    //public static void create3WordChildren( ??? ){}
+    public static void create3WordChildren(Node currentNode, Node goalNode,Queue<Node> remainingChildren,
+                                           Dictionary swedishDictionary, Dictionary visitedChildren){
+        char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'};
+        String currentWord = currentNode.getWord();
+        for (int i = 0; i < currentWord.length(); i++){
+            for (char letter : alphabet){
+
+                String newWord = currentWord.substring(0,i) + letter + currentWord.substring(i+1,3);
+
+                if (!swedishDictionary.exist(newWord)) continue;
+                if (visitedChildren.exist(newWord)) continue;
+
+                if (goalNode.isSameWord(newWord)){
+                    goalNode.setParent(currentNode);
+                    return;
+                }
+
+                Node newChild = new Node(newWord);
+                newChild.setParent(currentNode);
+                remainingChildren.add(newChild);
+                visitedChildren.add(newWord);
+            }
+        }
+    }
 
     public static void writeChainBackwards(Node node){
-        return;
+        Node currentNode = node;
+        while (currentNode != null){
+            System.out.print(currentNode.getWord());
+            if (currentNode.getParent() != null){
+                System.out.print(" -> ");
+            }
+            currentNode = currentNode.getParent();
+        }
     }
 
     public static void writeChain(Node node){
-        return;
+        if (node == null) return;
+        writeChain(node.getParent());
+        if (node.getParent() != null){
+            System.out.print(" -> ");
+        }
+        System.out.print(node.getWord());
     }
 }
