@@ -10,6 +10,7 @@ class Node{
 
     public Node(String word){
         this.word = word;
+        this.parent = null;
     }
 
     public String getWord() {
@@ -24,8 +25,8 @@ class Node{
         this.parent = parent;
     }
 
-    public boolean isSameWord(Node other) {
-        return this.word.equals(other.getWord());
+    public boolean isSameWord(String word) {
+        return this.word.equals(word);
     }
 }
 
@@ -78,7 +79,7 @@ public class BFS3Word {
 
     }
     public static void start(String startWord, String endWord){
-        Dictionary all3Words = new Dictionary("word3.txt");
+        Dictionary swedishDictionary = new Dictionary("word3.txt");
 
         /*
             Do we need other containers to store our data?
@@ -93,14 +94,30 @@ public class BFS3Word {
             We probably need a while-loop, what should the loop condition be?
         */
 
-        // Here should the code or method be called to print out the found path
-        System.out.println(startNode.getWord() + " -> " + endNode.getWord());
+        if (endNode.getParent() != null){
+            System.out.printf("A path exist between '%s' to '%s'! \n", startNode.getWord(), endNode.getWord());
+            System.out.print("\nReverse order: ");
+            writeChainBackwards(endNode);
+            System.out.print("\nNormal order:  ");
+            writeChain(endNode);
+            System.out.println();
+        }
+        else{
+            System.out.printf("No path exist!\n");
+        }
     }
 
     /*
         We need to generate 3-word-children for the word of interest...so let's make a method!
-        What should we send into public void create3WordChildren?
+        What should we send into public static void create3WordChildren?
     */
-    //public void create3WordChildren(...?)
+    //public static void create3WordChildren( ??? ){}
 
+    public static void writeChainBackwards(Node node){
+        return;
+    }
+
+    public static void writeChain(Node node){
+        return;
+    }
 }
