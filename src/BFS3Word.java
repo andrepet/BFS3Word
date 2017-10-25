@@ -24,8 +24,8 @@ class Node{
         this.parent = parent;
     }
 
-    public boolean equals(Node node) {
-        return word.equals(node.word);
+    public boolean isSameWord(Node other) {
+        return this.word.equals(other.getWord());
     }
 }
 
