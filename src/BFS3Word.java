@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 class Node{
     private String word;
@@ -33,7 +31,7 @@ class Node{
 
 class Dictionary{
 
-    private List<String> dictionary = new LinkedList<>();
+    private Set<String> dictionary = new HashSet<>();
 
     public Dictionary(){}
 
@@ -66,6 +64,8 @@ class Dictionary{
 }
 
 public class BFS3Word {
+    public final static Dictionary swedishDictionary = new Dictionary("word3.txt");
+    public final static char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'};
     public static void main(String[] args) {
 
         // Example code using Kattio to read data from System.in
@@ -75,12 +75,11 @@ public class BFS3Word {
             String endWord = io.getWord();
 
             start(startWord, endWord);
-        }
-        io.close();
+       }
+       io.close();
 
     }
     public static void start(String startWord, String endWord){
-        Dictionary swedishDictionary = new Dictionary("word3.txt");
 
         Dictionary visitedChildren = new Dictionary();
         Queue<Node> remainingChildren = new LinkedList<>();
@@ -91,7 +90,8 @@ public class BFS3Word {
         remainingChildren.add(startNode);
         while(!remainingChildren.isEmpty()){
             Node currentNode = remainingChildren.remove();
-            create3WordChildren(currentNode, endNode, remainingChildren, swedishDictionary, visitedChildren);
+            create3WordChildren(currentNode, endNode, remainingChildren, visitedChildren);
+            if (endNode.getParent() != null) break;
         }
 
         if (endNode.getParent() != null){
@@ -107,22 +107,21 @@ public class BFS3Word {
         }
     }
 
-    public static void create3WordChildren(Node currentNode, Node goalNode,Queue<Node> remainingChildren,
-                                           Dictionary swedishDictionary, Dictionary visitedChildren){
-        char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'};
+    public static void create3WordChildren( Node currentNode, Node endNode, Queue<Node> remainingChildren, Dictionary visitedChildren ){
         String currentWord = currentNode.getWord();
-        for (int i = 0; i < currentWord.length(); i++){
-            for (char letter : alphabet){
+        for (int i = 0; i<currentWord.length(); i++){
+            for (char letter : alphabet) {
+                char[] charWord = currentWord.toCharArray();
+                charWord[i] = letter;
+                String newWord = new String(charWord);
 
-                String newWord = currentWord.substring(0,i) + letter + currentWord.substring(i+1,3);
+                if (endNode.isSameWord(newWord)){
+                    endNode.setParent(currentNode);
+                    return;
+                }
 
                 if (!swedishDictionary.exist(newWord)) continue;
                 if (visitedChildren.exist(newWord)) continue;
-
-                if (goalNode.isSameWord(newWord)){
-                    goalNode.setParent(currentNode);
-                    return;
-                }
 
                 Node newChild = new Node(newWord);
                 newChild.setParent(currentNode);
@@ -131,10 +130,11 @@ public class BFS3Word {
             }
         }
     }
+    
 
     public static void writeChainBackwards(Node node){
         Node currentNode = node;
-        while (currentNode != null){
+        while(currentNode != null){
             System.out.print(currentNode.getWord());
             if (currentNode.getParent() != null){
                 System.out.print(" -> ");
